@@ -1,8 +1,13 @@
 ﻿namespace api.Models.NotMapped
 {
+    /// <summary>
+    /// Represents the effect of a transaction on the account balance.
+    /// </summary>
     public enum BalanceEffect
     {
-        Increase,
-        Decrease
+        // Increses the balance
+        Credit = 1,
+        // Decreases the balance
+        Debit = -1
     }
 }
