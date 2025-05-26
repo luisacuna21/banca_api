@@ -47,7 +47,7 @@ namespace api.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("api.Models.Customer", b =>
@@ -74,7 +74,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("api.Models.Transaction", b =>
@@ -114,7 +114,7 @@ namespace api.Migrations
 
                     b.HasIndex("TransactionTypeId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("api.Models.TransactionType", b =>
@@ -142,7 +142,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionTypes");
+                    b.ToTable("TransactionTypes", (string)null);
                 });
 
             modelBuilder.Entity("api.Models.Account", b =>

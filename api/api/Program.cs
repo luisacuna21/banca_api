@@ -1,3 +1,4 @@
+using api.Extensions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BankingDbContext>(options => options.UseSqlite("Data source=banking.db"));
 
 var app = builder.Build();
+
+// Apply migrations and seed the database
+if(app.Environment.IsDevelopment())
+{
+    app.ApplyMigrations();
+    app.SeedDataBase();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
