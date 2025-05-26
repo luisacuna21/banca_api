@@ -18,6 +18,10 @@ namespace api.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Account>()
+                .HasIndex(a => a.AccountNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Account>()
                 .HasOne(a => a.Customer)
                 .WithMany(c => c.Accounts)
                 .HasForeignKey(a => a.CustomerId)
