@@ -9,6 +9,6 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
 
-        public List<Account> Accounts { get; set; } = new List<Account>();
+        public List<Account> Accounts { get; } = new List<Account>();
     }
 }

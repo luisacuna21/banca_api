@@ -1,5 +1,5 @@
 ﻿using api.Models;
-using api.Models.NotMapped;
+using api.Models.Complements;
 
 namespace api.Data
 {

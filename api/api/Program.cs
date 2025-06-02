@@ -1,5 +1,8 @@
+using api.AutoMapper;
 using api.Extensions;
+using api.IServices;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddDbContext<BankingDbContext>(options => options.UseSqlite("Data source=banking.db"));
+builder.Services.AddDbContext<BankingDbContext>(options => options.UseSqlite("Data " +
+    "source=banking.db"));
+
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 var app = builder.Build();
 

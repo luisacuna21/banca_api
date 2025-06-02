@@ -1,4 +1,4 @@
-﻿namespace api.Models.NotMapped
+﻿namespace api.Models.Complements
 {
     /// <summary>
     /// Represents the effect of a transaction on the account balance.
