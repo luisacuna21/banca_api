@@ -9,5 +9,6 @@ namespace api.IServices
         Task<AccountDTO?> GetByIdAsync(int id);
         Task<AccountDTO?> GetAccountByAccountNumber(string accountNumber);
         Task<AccountDTO> CreateAsync(AccountCreateRequest createRequest);
+        Task<decimal> GetCurrentBalanceByAccountIdAsync(int accountId);
     }
 }
