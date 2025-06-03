@@ -28,6 +28,7 @@ namespace api.Services
             return accountDTO;
         }
 
+        // TODO: Check if this implementation is better than GetAllAsync
         public async Task<IEnumerable<AccountDTO>> GetAccountsByCustomerIdAsync(int customerId)
         {
             var accounts = await _context.Accounts
@@ -102,6 +103,17 @@ namespace api.Services
                 .FirstOrDefaultAsync(account => account.AccountNumber == accountNumber);
 
             return _mapper.Map<AccountDTO>(account);
+        }
+
+        public async Task<decimal> GetCurrentBalanceByAccountIdAsync(int accountId)
+        {
+            var account = await _context.Accounts
+                .Include(account => account.Transactions)
+                    .ThenInclude(transaction => transaction.TransactionType)
+                .ToListAsync();
+
+            var currentBalance = (_mapper.Map<AccountDTO>(account)).CurrentBalance;
+            return currentBalance;
         }
 
         //public async Task<decimal> CalculateAccountCurrentBalance(int accountId, decimal initialBalance)

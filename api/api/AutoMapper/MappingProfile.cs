@@ -2,6 +2,7 @@
 using api.Models.Complements;
 using api.Models.DTOs.AccountDTOs;
 using api.Models.DTOs.CustomerDTOs;
+using api.Models.DTOs.TransactionDTOs;
 using AutoMapper;
 
 namespace api.AutoMapper
@@ -11,8 +12,8 @@ namespace api.AutoMapper
         public MappingProfile()
         {
             // Mapping configurations for Customer and its DTOs
-            CreateMap<Customer, CustomerDTO>().ReverseMap();
-            CreateMap<CustomerCreateRequest, Customer>().ReverseMap();
+            CreateMap<Customer, CustomerDTO>();
+            CreateMap<CustomerCreateRequest, Customer>();
             CreateMap<CustomerUpdateRequest, Customer>()
                 .ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
                 .ForMember(dest => dest.Birthdate, opt => opt.Condition(src => src.Birthdate.HasValue))
@@ -25,13 +26,21 @@ namespace api.AutoMapper
                     dest => dest.CurrentBalance,
                     opt => opt.MapFrom(src =>
                         src.InitialBalance +
-                        (src.Transactions != null 
-                            ? src.Transactions.Sum(t => (t.TransactionType.BalanceEffect == BalanceEffect.Credit 
+                        (src.Transactions != null
+                            ? src.Transactions.Sum(t => (t.TransactionType.BalanceEffect == BalanceEffect.Credit
                                 ? t.Amount : -t.Amount))
                             : 0)
                     )
                 );
-            CreateMap<AccountCreateRequest, Account>().ReverseMap();
+            CreateMap<AccountCreateRequest, Account>();
+
+            // Mapping configuration for Transaction and its DTOs
+            CreateMap<Transaction, TransactionDTO>()
+                .ForMember(
+                    dest => dest.BalanceEffect,
+                    opt => opt.MapFrom(src => src.TransactionType.BalanceEffect)
+                );
+            CreateMap<TransactionCreateRequest, Transaction>();
         }
     }
 }
