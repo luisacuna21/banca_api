@@ -19,6 +19,7 @@ builder.Services.AddDbContext<BankingDbContext>(options => options.UseSqlite("Da
     "source=banking.db"));
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 
