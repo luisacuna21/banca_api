@@ -11,8 +11,8 @@ using api.Models;
 namespace api.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    [Migration("20250526173809_Add_BalanceEffect_To_TransactinType")]
-    partial class Add_BalanceEffect_To_TransactinType
+    [Migration("20250603205823_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,10 @@ namespace api.Migrations
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasMaxLength(19)
+                        .HasMaxLength(9)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("AnnualInterestRate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -69,7 +72,7 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -83,7 +86,7 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Amount")
@@ -92,36 +95,35 @@ namespace api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("DestinationAccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SourceAccountId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TransactionTypeId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("TransactionKind")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TransactionTypeName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("DestinationAccountId");
-
-                    b.HasIndex("SourceAccountId");
-
-                    b.HasIndex("TransactionTypeId");
+                    b.HasIndex("TransactionTypeName");
 
                     b.ToTable("Transactions");
+
+                    b.HasDiscriminator<string>("TransactionKind").HasValue("Base");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("api.Models.TransactionType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("BalanceEffect")
                         .HasColumnType("INTEGER");
@@ -133,16 +135,34 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("TransactionTypes");
+                });
+
+            modelBuilder.Entity("api.Models.InterestTransaction", b =>
+                {
+                    b.HasBaseType("api.Models.Transaction");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("Interest");
+                });
+
+            modelBuilder.Entity("api.Models.TransferTransaction", b =>
+                {
+                    b.HasBaseType("api.Models.Transaction");
+
+                    b.Property<int>("DestinationAccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("DestinationAccountId");
+
+                    b.HasDiscriminator().HasValue("Transfer");
                 });
 
             modelBuilder.Entity("api.Models.Account", b =>
@@ -158,32 +178,32 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Transaction", b =>
                 {
-                    b.HasOne("api.Models.Account", null)
+                    b.HasOne("api.Models.Account", "Account")
                         .WithMany("Transactions")
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("api.Models.Account", "DestinationAccount")
-                        .WithMany()
-                        .HasForeignKey("DestinationAccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("api.Models.Account", "SourceAccount")
-                        .WithMany()
-                        .HasForeignKey("SourceAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("api.Models.TransactionType", "TransactionType")
                         .WithMany("Transactions")
-                        .HasForeignKey("TransactionTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TransactionTypeName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("TransactionType");
+                });
+
+            modelBuilder.Entity("api.Models.TransferTransaction", b =>
+                {
+                    b.HasOne("api.Models.Account", "DestinationAccount")
+                        .WithMany()
+                        .HasForeignKey("DestinationAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DestinationAccount");
-
-                    b.Navigation("SourceAccount");
-
-                    b.Navigation("TransactionType");
                 });
 
             modelBuilder.Entity("api.Models.Account", b =>

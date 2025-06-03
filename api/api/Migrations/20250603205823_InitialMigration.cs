@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Migration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace api.Migrations
                     Birthdate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Incomes = table.Column<decimal>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,16 +32,15 @@ namespace api.Migrations
                 name: "TransactionTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
+                    BalanceEffect = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TransactionTypes", x => x.Id);
+                    table.PrimaryKey("PK_TransactionTypes", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,8 +49,9 @@ namespace api.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AccountNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    AccountNumber = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false),
                     InitialBalance = table.Column<decimal>(type: "TEXT", nullable: false),
+                    AnnualInterestRate = table.Column<decimal>(type: "TEXT", nullable: false),
                     CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -72,12 +72,14 @@ namespace api.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    AccountId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TransactionTypeName = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TransactionTypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SourceAccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DestinationAccountId = table.Column<int>(type: "INTEGER", nullable: true),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    TransactionKind = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
+                    InterestRate = table.Column<decimal>(type: "TEXT", nullable: true),
+                    DestinationAccountId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,26 +88,27 @@ namespace api.Migrations
                         name: "FK_Transactions_Accounts_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Accounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Transactions_Accounts_DestinationAccountId",
                         column: x => x.DestinationAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_Accounts_SourceAccountId",
-                        column: x => x.SourceAccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Transactions_TransactionTypes_TransactionTypeId",
-                        column: x => x.TransactionTypeId,
+                        name: "FK_Transactions_TransactionTypes_TransactionTypeName",
+                        column: x => x.TransactionTypeName,
                         principalTable: "TransactionTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Name",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_AccountNumber",
+                table: "Accounts",
+                column: "AccountNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_CustomerId",
@@ -123,14 +126,9 @@ namespace api.Migrations
                 column: "DestinationAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_SourceAccountId",
+                name: "IX_Transactions_TransactionTypeName",
                 table: "Transactions",
-                column: "SourceAccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_TransactionTypeId",
-                table: "Transactions",
-                column: "TransactionTypeId");
+                column: "TransactionTypeName");
         }
 
         /// <inheritdoc />

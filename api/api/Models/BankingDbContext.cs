@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 
 namespace api.Models
 {
@@ -27,29 +28,20 @@ namespace api.Models
                 .HasForeignKey(a => a.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Account>()
-                .HasMany(a => a.Transactions)
-                .WithOne(t => t.SourceAccount)
-                .HasForeignKey(t => t.SourceAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TransactionType>()
+                .HasKey(tt => tt.Name);
+
+            modelBuilder.Entity<Transaction>()
+            .HasDiscriminator<string>("TransactionKind")
+            .HasValue<Transaction>("Base")
+            .HasValue<TransferTransaction>("Transfer")
+            .HasValue<InterestTransaction>("Interest");
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.TransactionType)
                 .WithMany(tt => tt.Transactions)
-                .HasForeignKey(t => t.TransactionTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.SourceAccount)
-                .WithMany()
-                .HasForeignKey(t => t.SourceAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.DestinationAccount)
-                .WithMany()
-                .HasForeignKey(t => t.DestinationAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(t => t.TransactionTypeName)
+                .HasPrincipalKey(tt => tt.Name);
         }
     }
 }
