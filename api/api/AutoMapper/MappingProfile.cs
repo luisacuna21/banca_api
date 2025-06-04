@@ -40,10 +40,9 @@ namespace api.AutoMapper
                     dest => dest.BalanceEffect,
                     opt => opt.MapFrom(src => src.TransactionType.BalanceEffect)
                 );
-            CreateMap<TransactionCreateRequest, Transaction>();
-            // Mapping configuration for transfer transactions (just for source account)
-            // The destination account will be handled separately
-            CreateMap<TransactionCreateRequest, TransferInTransaction>();
+            // Configuration for mapping Simple transactions create requests to transaction (such as deposits, withdrawals, and so on)
+            CreateMap<SimpleTransactionCreateRequest, Transaction>();
+            CreateMap<TransferTransactionCreateRequest, TransferOutTransaction>();
         }
     }
 }

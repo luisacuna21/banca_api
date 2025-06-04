@@ -54,7 +54,7 @@ namespace api.Controllers
         [HttpGet("accountnumber/{accountNumber}")]
         public async Task<ActionResult<AccountDTO>> GetAccountByAccountNumber(string accountNumber)
         {
-            var account = await _accountService.GetAccountByAccountNumber(accountNumber);
+            var account = await _accountService.GetAccountByAccountNumberAsync(accountNumber);
             if (account == null) return NotFound();
             return Ok(account);
         }

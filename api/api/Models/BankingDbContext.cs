@@ -34,8 +34,8 @@ namespace api.Models
             modelBuilder.Entity<Transaction>()
             .HasDiscriminator<string>("TransferDiscriminator")
             .HasValue<Transaction>("Base")
-            .HasValue<TransferInTransaction>("Transfer_Record_For_Source_Account")
-            .HasValue<TransferOutTransaction>("Transfer_Record_For_Destination_Account")
+            .HasValue<TransferOutTransaction>("Transfer_Record_For_Source_Account")
+            .HasValue<TransferInTransaction>("Transfer_Record_For_Destination_Account")
             .HasValue<InterestTransaction>("Interest");
 
             modelBuilder.Entity<Transaction>()

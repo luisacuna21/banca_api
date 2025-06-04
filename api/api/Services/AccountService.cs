@@ -95,7 +95,7 @@ namespace api.Services
             return accountDTO;
         }
 
-        public async Task<AccountDTO?> GetAccountByAccountNumber(string accountNumber)
+        public async Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber)
         {
             var account = await _context.Accounts
                 .Include(account => account.Transactions)
@@ -105,6 +105,7 @@ namespace api.Services
             return _mapper.Map<AccountDTO>(account);
         }
 
+        // TODO: REMOVE THIS
         public async Task<decimal> GetCurrentBalanceByAccountIdAsync(int accountId)
         {
             var account = await _context.Accounts
@@ -116,19 +117,24 @@ namespace api.Services
             var accountDTO = _mapper.Map<AccountDTO>(account);
             var currentBalance = accountDTO.CurrentBalance;
             return currentBalance;
-            //var currentBalance = (_mapper.Map<AccountDTO>(account)).CurrentBalance;
-            //return currentBalance;
+        }
+        public async Task<decimal> GetCurrentBalanceByAccountNumberAsync(string accountNumber)
+        {
+            var account = await _context.Accounts
+                .Where(account => account.AccountNumber == accountNumber)
+                .Include(account => account.Transactions)
+                    .ThenInclude(transaction => transaction.TransactionType)
+                .FirstOrDefaultAsync();
+
+            var accountDTO = _mapper.Map<AccountDTO>(account);
+            var currentBalance = accountDTO.CurrentBalance;
+            return currentBalance;
         }
 
-        //public async Task<decimal> CalculateAccountCurrentBalance(int accountId, decimal initialBalance)
-        //{
-        //    var transactions = await _context.Transactions
-        //        .Where(transaction => transaction.SourceAccountId == accountId)
-        //        .ToListAsync();
-
-        //    var currentBalance = initialBalance + (transactions != null ? transactions.Sum(transaction => transaction.TransactionType.BalanceEffect == Models.Complements.BalanceEffect.Credit ? transaction.Amount : -transaction.Amount) : 0);
-
-        //    return currentBalance;
-        //}
+        public async Task<bool> CheckIfExistsByAccountNumber(string accountNumber)
+        {
+            var account = await _context.Accounts.FirstOrDefaultAsync(account => account.AccountNumber == accountNumber);
+            return account != null;
+        }
     }
 }

@@ -7,8 +7,14 @@ namespace api.IServices
         Task<IEnumerable<AccountDTO>?> GetAccountsByCustomerIdAsync(int customerId);
         Task<IEnumerable<AccountDTO>?> GetAllAsync();
         Task<AccountDTO?> GetByIdAsync(int id);
-        Task<AccountDTO?> GetAccountByAccountNumber(string accountNumber);
+        Task<AccountDTO?> GetAccountByAccountNumberAsync(string accountNumber);
         Task<AccountDTO> CreateAsync(AccountCreateRequest createRequest);
+
+        // TODO: REMOVE THIS
         Task<decimal> GetCurrentBalanceByAccountIdAsync(int accountId);
+
+        Task<decimal> GetCurrentBalanceByAccountNumberAsync(string accountNumber);
+
+        Task<bool> CheckIfExistsByAccountNumber(string accountNumber);
     }
 }

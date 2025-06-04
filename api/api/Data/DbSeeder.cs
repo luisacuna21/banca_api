@@ -15,36 +15,41 @@ namespace api.Data
                     {
                         Name = "deposit",
                         Description = "Depósito a la cuenta",
+                        Simple = true,
                         BalanceEffect = BalanceEffect.Credit
                     },
                     new TransactionType
                     {
                         Name = "withdrawal",
                         Description = "Retiro desde la cuenta",
+                        Simple = true,
                         BalanceEffect = BalanceEffect.Debit
                     },
-                    new TransactionType
-                    {
-                        Name = "transfer",
-                        Description = "Virtual, utilizado para solicitudes a la API. Transferencia entre cuentas",
-                        BalanceEffect = BalanceEffect.Debit
-                    },
+                    //new TransactionType
+                    //{
+                    //    Name = "transfer",
+                    //    Description = "Virtual, utilizado para solicitudes a la API. Transferencia entre cuentas",
+                    //    BalanceEffect = BalanceEffect.Debit, 
+                    //},
                     new TransactionType
                     {
                         Name = "transfer_in",
                         Description = "Transferencia recibida desde otra cuenta",
+                        Simple = false,
                         BalanceEffect = BalanceEffect.Credit
                     },
                     new TransactionType
                     {
                         Name = "transfer_out",
                         Description = "Transferencia enviada a otra cuenta",
+                        Simple = false,
                         BalanceEffect = BalanceEffect.Debit
                     },
                     new TransactionType
                     {
                         Name = "interest",
                         Description = "Intereses generados en la cuenta",
+                        Simple = false,
                         BalanceEffect = BalanceEffect.Credit
                     }
                 );

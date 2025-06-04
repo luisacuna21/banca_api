@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Models;
 
@@ -10,9 +11,11 @@ using api.Models;
 namespace api.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604195419_Add_Simple_Field_To_TransactionTypes")]
+    partial class Add_Simple_Field_To_TransactionTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
@@ -47,7 +50,7 @@ namespace api.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("api.Models.Customer", b =>
@@ -74,7 +77,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("api.Models.Transaction", b =>
@@ -110,7 +113,7 @@ namespace api.Migrations
 
                     b.HasIndex("TransactionTypeName");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
 
                     b.HasDiscriminator<string>("TransferDiscriminator").HasValue("Base");
 
@@ -140,7 +143,7 @@ namespace api.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("TransactionTypes", (string)null);
+                    b.ToTable("TransactionTypes");
                 });
 
             modelBuilder.Entity("api.Models.InterestTransaction", b =>
