@@ -2,5 +2,6 @@
 {
     public class TransactionCreateRequest : TransactionBaseDTO
     {
+        public int DestinationAccountId { get; set; }
     }
 }

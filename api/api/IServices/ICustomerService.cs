@@ -5,7 +5,7 @@ namespace api.IServices
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<CustomerDTO>> GetAllAsync();
+        Task<IEnumerable<CustomerDTO>?> GetAllAsync();
         Task<CustomerDTO?> GetByIdAsync(int id);
         Task<CustomerDTO> CreateAsync(CustomerCreateRequest createRequest);
         Task<bool> UpdateAsync(int id, CustomerUpdateRequest updateRequest);

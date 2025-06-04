@@ -20,6 +20,7 @@ builder.Services.AddDbContext<BankingDbContext>(options => options.UseSqlite("Da
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 var app = builder.Build();
 

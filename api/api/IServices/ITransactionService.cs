@@ -1,4 +1,5 @@
-﻿using api.Models.DTOs.TransactionDTOs;
+﻿using api.Models;
+using api.Models.DTOs.TransactionDTOs;
 
 namespace api.IServices
 {

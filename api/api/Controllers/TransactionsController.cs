@@ -17,36 +17,31 @@ namespace api.Controllers
             _transactionService = transactionService;
         }
 
-        //// GET: api/<TransactionsController>
-        //[HttpGet("/account/{accountId}")]
-        //public async Task<ActionResult<IEnumerable<TransactionDTO>>> GetAllByAccountIdAsync(int accountId)
-        //{
-        //    var transactions = await _transactionService.GetAllByAccountIdAsync(accountId.ToString());
-        //}
+        // GET: api/<TransactionsController>/account/{accountId}
+        [HttpGet("/account/{accountId}")]
+        public async Task<ActionResult<IEnumerable<TransactionDTO>?>> GetAllByAccountIdAsync(int accountId)
+        {
+            var transactions = await _transactionService.GetAllByAccountIdAsync(accountId);
+            return NotFound(transactions);
+        }
 
         // GET api/<TransactionsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TransactionDTO>> GetById(int id)
         {
-            return "value";
+            var transaction = await _transactionService.GetByIdAsync(id);
+            if (transaction == null) return NotFound();
+
+            return Ok(transaction);
         }
 
         // POST api/<TransactionsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<TransactionDTO>> Create(TransactionCreateRequest createRequest)
         {
-        }
-
-        // PUT api/<TransactionsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<TransactionsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            // TODO: Validate with try-catch
+            var transaction = await _transactionService.CreateAsync(createRequest);
+            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
         }
     }
 }

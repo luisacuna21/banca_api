@@ -30,7 +30,7 @@ namespace api.Services
             return customerDTO;
         }
 
-        public async Task<IEnumerable<CustomerDTO>> GetAllAsync()
+        public async Task<IEnumerable<CustomerDTO>?> GetAllAsync()
         {
             var customers = await _context.Customers.ToListAsync();
             return _mapper.Map<IEnumerable<CustomerDTO>>(customers);

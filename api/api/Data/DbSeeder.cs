@@ -13,25 +13,37 @@ namespace api.Data
                 dbContext.TransactionTypes.AddRange(
                     new TransactionType
                     {
-                        Name = "Depósito",
+                        Name = "deposit",
                         Description = "Depósito a la cuenta",
                         BalanceEffect = BalanceEffect.Credit
                     },
                     new TransactionType
                     {
-                        Name = "Retiro",
+                        Name = "withdrawal",
                         Description = "Retiro desde la cuenta",
                         BalanceEffect = BalanceEffect.Debit
                     },
                     new TransactionType
                     {
-                        Name = "Transferencia",
-                        Description = "Transferencia entre cuentas",
+                        Name = "transfer",
+                        Description = "Virtual, utilizado para solicitudes a la API. Transferencia entre cuentas",
                         BalanceEffect = BalanceEffect.Debit
                     },
                     new TransactionType
                     {
-                        Name = "Intereses",
+                        Name = "transfer_in",
+                        Description = "Transferencia recibida desde otra cuenta",
+                        BalanceEffect = BalanceEffect.Credit
+                    },
+                    new TransactionType
+                    {
+                        Name = "transfer_out",
+                        Description = "Transferencia enviada a otra cuenta",
+                        BalanceEffect = BalanceEffect.Debit
+                    },
+                    new TransactionType
+                    {
+                        Name = "interest",
                         Description = "Intereses generados en la cuenta",
                         BalanceEffect = BalanceEffect.Credit
                     }

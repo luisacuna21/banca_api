@@ -32,9 +32,10 @@ namespace api.Models
                 .HasKey(tt => tt.Name);
 
             modelBuilder.Entity<Transaction>()
-            .HasDiscriminator<string>("TransactionKind")
+            .HasDiscriminator<string>("TransferDiscriminator")
             .HasValue<Transaction>("Base")
-            .HasValue<TransferTransaction>("Transfer")
+            .HasValue<TransferInTransaction>("Transfer_Record_For_Source_Account")
+            .HasValue<TransferOutTransaction>("Transfer_Record_For_Destination_Account")
             .HasValue<InterestTransaction>("Interest");
 
             modelBuilder.Entity<Transaction>()

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Models;
 
@@ -10,9 +11,11 @@ using api.Models;
 namespace api.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250603215706_Add_TransferIn_TransferOut_Support")]
+    partial class Add_TransferIn_TransferOut_Support
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
@@ -95,13 +98,13 @@ namespace api.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TransactionTypeName")
+                    b.Property<string>("TransactionKind")
                         .IsRequired()
+                        .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TransferDiscriminator")
+                    b.Property<string>("TransactionTypeName")
                         .IsRequired()
-                        .HasMaxLength(55)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -112,7 +115,7 @@ namespace api.Migrations
 
                     b.ToTable("Transactions");
 
-                    b.HasDiscriminator<string>("TransferDiscriminator").HasValue("Base");
+                    b.HasDiscriminator<string>("TransactionKind").HasValue("Base");
 
                     b.UseTphMappingStrategy();
                 });
@@ -159,7 +162,7 @@ namespace api.Migrations
 
                     b.HasIndex("DestinationAccountId");
 
-                    b.HasDiscriminator().HasValue("Transfer_Record_For_Source_Account");
+                    b.HasDiscriminator().HasValue("Transfer_In");
                 });
 
             modelBuilder.Entity("api.Models.TransferOutTransaction", b =>
@@ -171,7 +174,7 @@ namespace api.Migrations
 
                     b.HasIndex("SourceAccountId");
 
-                    b.HasDiscriminator().HasValue("Transfer_Record_For_Destination_Account");
+                    b.HasDiscriminator().HasValue("Transfer_Out");
                 });
 
             modelBuilder.Entity("api.Models.Account", b =>

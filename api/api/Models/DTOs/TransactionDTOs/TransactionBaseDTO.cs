@@ -1,11 +1,16 @@
-﻿namespace api.Models.DTOs.TransactionDTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace api.Models.DTOs.TransactionDTOs
 {
     public class TransactionBaseDTO
     {
+        public int AccountId { get; set; }
+
+        [Required(ErrorMessage = "El tipo de transacción es obligatorio.")]
+        public string TransactionTypeName { get; set; }
+        
         public decimal Amount { get; set; }
-        public int TransactionTypeId { get; set; }
-        public int SourceAccountId { get; set; }
-        public int? DestinationAccountId { get; set; }
+        
         public string? Description { get; set; }
     }
 }
