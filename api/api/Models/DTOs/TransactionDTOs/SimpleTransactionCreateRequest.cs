@@ -6,5 +6,7 @@ namespace api.Models.DTOs.TransactionDTOs
     {
         [Required(ErrorMessage = "El tipo de transacción es obligatorio.")]
         public string TransactionTypeName { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }

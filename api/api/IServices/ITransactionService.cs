@@ -33,9 +33,6 @@ namespace api.IServices
         /// <param name="accountNumber"></param>
         /// <returns></returns>
         Task<IEnumerable<TransactionDTO>?> GetTransactionsByAccountNumber(string accountNumber);
-
-        // TODO: REMOVE THIS
-        Task<IEnumerable<TransactionDTO>?> GetAllByAccountIdAsync(int accountId);
         
         Task<TransactionDTO?> GetByIdAsync(int id);
 

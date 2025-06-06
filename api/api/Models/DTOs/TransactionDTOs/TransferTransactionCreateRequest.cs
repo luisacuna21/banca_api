@@ -6,5 +6,7 @@ namespace api.Models.DTOs.TransactionDTOs
     {
         [Required(ErrorMessage = "El número de cuenta de destino es obligatorio.")]
         public string DestinationAccountNumber { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }

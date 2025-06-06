@@ -17,13 +17,13 @@ namespace api.Controllers
             _transactionService = transactionService;
         }
 
-        // GET: api/<TransactionsController>/account/{accountId}
-        [HttpGet("account/{accountId}")]
-        public async Task<ActionResult<IEnumerable<TransactionDTO>?>> GetAllByAccountIdAsync(int accountId)
-        {
-            var transactions = await _transactionService.GetAllByAccountIdAsync(accountId);
-            return NotFound(transactions);
-        }
+        //// GET: api/<TransactionsController>/account/{accountId}
+        //[HttpGet("account/{accountId}")]
+        //public async Task<ActionResult<IEnumerable<TransactionDTO>?>> GetAllByAccountIdAsync(int accountId)
+        //{
+        //    var transactions = await _transactionService.GetAllByAccountIdAsync(accountId);
+        //    return NotFound(transactions);
+        //}
 
         // GET api/<TransactionsController>/5
         [HttpGet("{id}")]
@@ -41,7 +41,6 @@ namespace api.Controllers
         {
             try
             {
-                // TODO: Validate with try-catch
                 var transaction = await _transactionService.CreateSimpleTransactionAsync(createRequest);
                 return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
             }
@@ -61,8 +60,26 @@ namespace api.Controllers
         {
             try
             {
-                // TODO: Validate with try-catch
                 var transaction = await _transactionService.CreateTransferTransactionAsync(createRequest);
+                return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/<TransactionsController>
+        [HttpPost("interest")]
+        public async Task<ActionResult<TransactionDTO>> CreateInterestTransaction(InterestTransactionCreateRequest createRequest)
+        {
+            try
+            {
+                var transaction = await _transactionService.CreateInterestTransactionAsync(createRequest);
                 return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
             }
             catch (InvalidOperationException ex)
