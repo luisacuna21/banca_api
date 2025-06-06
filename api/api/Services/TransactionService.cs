@@ -208,6 +208,8 @@ namespace api.Services
 
             // Save transaction for source account (transfer_out)
             var transferRecordForSourceAccount = _mapper.Map<TransferOutTransaction>(transferTransaction);
+            // Set Transaction Type Name here (transfer_out) for source account
+            transferRecordForSourceAccount.TransactionTypeName = TransactionTypeNames.TransferOut;
             // Set the Account Id to the Transaction record
             transferRecordForSourceAccount.AccountId = sourceAccount.Id;
             // Set the DestinationAccount Id to the Transaction record
